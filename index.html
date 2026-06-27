@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#070B18">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal Produksi PT TIGERMANDIRI PRATAMA - Akses sistem laporan dan absensi terintegrasi.">
+    <title>Portal Produksi | Tiger Production System</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #070B18;
+            --bg-soft: #0B1024;
+            --panel-bg: rgba(15, 23, 42, 0.84);
+            --panel-bg-strong: rgba(15, 23, 42, 0.94);
+            --panel-border: rgba(129, 140, 248, 0.18);
+            --panel-border-strong: rgba(129, 140, 248, 0.34);
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-soft: #CBD5E1;
+            --indigo: #6366F1;
+            --indigo-soft: #818CF8;
+            --indigo-pale: #A5B4FC;
+            --emerald: #10B981;
+            --purple: #C4B5FD;
+            --orange: #FB923C;
+            --cyan: #38BDF8;
+            --shadow: rgba(2, 6, 23, 0.42);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            min-height: 100%;
+            background: var(--bg-deep);
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-primary);
+            background:
+                radial-gradient(ellipse 70% 52% at 12% 0%, rgba(99,102,241,0.24), transparent 58%),
+                radial-gradient(ellipse 58% 44% at 86% 92%, rgba(16,185,129,0.11), transparent 56%),
+                linear-gradient(180deg, #070B18 0%, #0B1024 48%, #070B18 100%);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-orb-1,
+        .bg-orb-2,
+        .bg-orb-3 {
+            position: fixed;
+            border-radius: 999px;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(2px);
+        }
+
+        .bg-orb-1 {
+            top: -220px;
+            left: -180px;
+            width: 620px;
+            height: 620px;
+            background: radial-gradient(circle, rgba(99,102,241,0.20), transparent 68%);
+        }
+
+        .bg-orb-2 {
+            right: -220px;
+            bottom: -240px;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(16,185,129,0.12), transparent 68%);
+        }
+
+        .bg-orb-3 {
+            left: 50%;
+            top: 42%;
+            width: 520px;
+            height: 520px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(196,181,253,0.08), transparent 70%);
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1220px;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 56px 22px 46px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-panel {
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            margin-bottom: 34px;
+            padding: 42px 28px 38px;
+            background: linear-gradient(145deg, rgba(15,23,42,0.78), rgba(11,16,36,0.66));
+            border: 1px solid var(--panel-border);
+            border-radius: 30px;
+            box-shadow: 0 28px 90px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.05);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            animation: fadeInDown 0.75s ease both;
+        }
+
+        .hero-panel::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background:
+                radial-gradient(circle at 18% 0%, rgba(99,102,241,0.22), transparent 32%),
+                radial-gradient(circle at 88% 110%, rgba(16,185,129,0.10), transparent 34%);
+            pointer-events: none;
+        }
+
+        .hero-panel > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 16px;
+            background: rgba(99,102,241,0.13);
+            border: 1px solid rgba(129,140,248,0.24);
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #C7D2FE;
+            margin-bottom: 18px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            box-shadow: 0 12px 28px rgba(99,102,241,0.14);
+        }
+
+        .badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #34D399;
+            box-shadow: 0 0 18px rgba(52,211,153,0.72);
+        }
+
+        .title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.35rem, 5vw, 4.4rem);
+            line-height: 0.98;
+            margin: 0 0 14px;
+            color: var(--text-primary);
+            letter-spacing: -0.035em;
+            text-shadow: 0 14px 38px rgba(0,0,0,0.30);
+        }
+
+        .title span {
+            color: var(--indigo-pale);
+            font-style: italic;
+        }
+
+        .subtitle {
+            max-width: 680px;
+            margin: 0 auto;
+            font-size: 0.96rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        .system-strip {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .system-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 13px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.58);
+            border: 1px solid rgba(148,163,184,0.14);
+            color: var(--text-soft);
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+        }
+
+        .system-chip i {
+            width: 14px;
+            height: 14px;
+            color: var(--indigo-pale);
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 22px;
+            width: 100%;
+            animation: fadeInUp 0.85s 0.08s ease both;
+        }
+
+        @media (max-width: 1080px) {
+            .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .container { padding-top: 34px; }
+        }
+
+        @media (max-width: 640px) {
+            .app-grid { grid-template-columns: 1fr; }
+            .hero-panel { padding: 32px 20px; border-radius: 24px; }
+            .container { padding: 22px 14px 30px; }
+        }
+
+        .app-card {
+            --card-accent: var(--indigo);
+            --card-accent-rgb: 99, 102, 241;
+            min-height: 245px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-decoration: none;
+            color: var(--text-primary);
+            padding: 24px;
+            background: linear-gradient(145deg, rgba(15,23,42,0.90), rgba(11,16,36,0.76));
+            border: 1px solid var(--panel-border);
+            border-radius: 26px;
+            box-shadow: 0 22px 70px rgba(2,6,23,0.32), inset 0 1px 0 rgba(255,255,255,0.04);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s, box-shadow 0.25s;
+            isolation: isolate;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background:
+                radial-gradient(circle at 18% 0%, rgba(var(--card-accent-rgb),0.20), transparent 32%),
+                radial-gradient(circle at 92% 100%, rgba(255,255,255,0.06), transparent 36%);
+            opacity: 0.82;
+            z-index: 0;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .app-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -70%;
+            width: 55%;
+            height: 100%;
+            transform: skewX(-18deg);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            opacity: 0;
+            z-index: 1;
+            transition: left 0.68s ease, opacity 0.25s ease;
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(var(--card-accent-rgb),0.48);
+            box-shadow:
+                0 30px 90px rgba(2,6,23,0.44),
+                0 0 36px rgba(var(--card-accent-rgb),0.18),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        .app-card:hover::before {
+            opacity: 1;
+            transform: scale(1.04);
+        }
+
+        .app-card:hover::after {
+            left: 120%;
+            opacity: 1;
+        }
+
+        .card-glow {
+            position: absolute;
+            right: -80px;
+            bottom: -90px;
+            width: 230px;
+            height: 230px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(var(--card-accent-rgb),0.18), transparent 68%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .icon-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+            color: var(--card-accent);
+            background: rgba(var(--card-accent-rgb),0.12);
+            border: 1px solid rgba(var(--card-accent-rgb),0.22);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+            transition: all 0.35s ease;
+        }
+
+        .icon-wrapper i {
+            width: 24px;
+            height: 24px;
+        }
+
+        .app-card:hover .icon-wrapper {
+            color: white;
+            background: linear-gradient(135deg, rgba(var(--card-accent-rgb),1), rgba(165,180,252,0.92));
+            border-color: transparent;
+            transform: scale(1.06) rotate(-2deg);
+            box-shadow: 0 12px 28px rgba(var(--card-accent-rgb),0.32);
+        }
+
+        .app-copy {
+            position: relative;
+            z-index: 2;
+        }
+
+        .app-title {
+            font-size: 1.05rem;
+            font-weight: 900;
+            margin: 0 0 9px;
+            letter-spacing: -0.02em;
+            line-height: 1.28;
+        }
+
+        .app-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin: 0 0 22px;
+            line-height: 1.62;
+            font-weight: 500;
+        }
+
+        .enter-btn {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: auto;
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            transition: color 0.25s, gap 0.25s;
+        }
+
+        .enter-btn span {
+            font-size: 1.1rem;
+            transform: translateY(-1px);
+        }
+
+        .app-card:hover .enter-btn {
+            gap: 13px;
+            color: var(--card-accent);
+        }
+
+        .c-absensi {
+            --card-accent: var(--cyan);
+            --card-accent-rgb: 56, 189, 248;
+        }
+
+        .c-material {
+            --card-accent: var(--emerald);
+            --card-accent-rgb: 16, 185, 129;
+        }
+
+        .c-hris {
+            --card-accent: var(--purple);
+            --card-accent-rgb: 196, 181, 253;
+        }
+
+        .c-price {
+            --card-accent: var(--orange);
+            --card-accent-rgb: 251, 146, 60;
+        }
+
+        .footer-note {
+            margin-top: 34px;
+            padding: 18px 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: 1px solid rgba(129,140,248,0.14);
+            border-radius: 22px;
+            background: rgba(15,23,42,0.35);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        /* ═══════════════════════════════════════════
+           COMPACT ABOVE-THE-FOLD LAYOUT
+           Biar pas dibuka langsung terlihat semua tanpa scroll di desktop.
+        ═══════════════════════════════════════════ */
+        @media (min-width: 900px) {
+            body {
+                min-height: 100vh;
+            }
+
+            .container {
+                min-height: 100vh;
+                padding-top: 28px;
+                padding-bottom: 22px;
+                justify-content: center;
+            }
+
+            .hero-panel {
+                padding: 26px 28px 24px;
+                margin-bottom: 24px;
+                border-radius: 26px;
+            }
+
+            .badge {
+                margin-bottom: 12px;
+                padding: 6px 14px;
+                font-size: 10px;
+            }
+
+            .title {
+                font-size: clamp(2.25rem, 4vw, 3.35rem);
+                margin-bottom: 10px;
+                line-height: 0.98;
+            }
+
+            .subtitle {
+                font-size: 0.88rem;
+                line-height: 1.55;
+                max-width: 620px;
+            }
+
+            .system-strip {
+                margin-top: 18px;
+                gap: 10px;
+            }
+
+            .system-chip {
+                padding: 7px 12px;
+                font-size: 0.66rem;
+            }
+
+            .app-grid {
+                gap: 18px;
+            }
+
+            .app-card {
+                min-height: 204px;
+                padding: 20px;
+                border-radius: 22px;
+            }
+
+            .icon-wrapper {
+                width: 48px;
+                height: 48px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+            }
+
+            .icon-wrapper i {
+                width: 22px;
+                height: 22px;
+            }
+
+            .app-title {
+                font-size: 0.98rem;
+                margin-bottom: 7px;
+            }
+
+            .app-desc {
+                font-size: 0.78rem;
+                line-height: 1.5;
+                margin-bottom: 16px;
+            }
+
+            .enter-btn {
+                font-size: 0.68rem;
+            }
+
+            .footer-note {
+                margin-top: 18px;
+                padding: 12px 16px;
+                border-radius: 18px;
+                font-size: 0.68rem;
+            }
+        }
+
+        @media (min-width: 900px) and (max-height: 720px) {
+            .container {
+                padding-top: 18px;
+                padding-bottom: 14px;
+            }
+
+            .hero-panel {
+                padding: 20px 24px 18px;
+                margin-bottom: 18px;
+            }
+
+            .title {
+                font-size: clamp(2rem, 3.5vw, 2.9rem);
+            }
+
+            .subtitle {
+                font-size: 0.82rem;
+                line-height: 1.45;
+            }
+
+            .system-strip {
+                margin-top: 14px;
+            }
+
+            .system-chip {
+                padding: 6px 10px;
+            }
+
+            .app-card {
+                min-height: 184px;
+                padding: 18px;
+            }
+
+            .icon-wrapper {
+                width: 44px;
+                height: 44px;
+                margin-bottom: 14px;
+            }
+
+            .app-desc {
+                font-size: 0.75rem;
+                line-height: 1.45;
+                margin-bottom: 13px;
+            }
+
+            .footer-note {
+                margin-top: 14px;
+                padding: 9px 14px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-orb-1"></div>
+    <div class="bg-orb-2"></div>
+    <div class="bg-orb-3"></div>
+
+    <div class="container">
+        <section class="hero-panel">
+            <div class="badge">PT TIGERMANDIRI PRATAMA</div>
+            <h1 class="title">Produksi Portal <span>Sistem</span></h1>
+            <p class="subtitle">Akses seluruh sistem laporan produksi dan absensi dalam satu ekosistem kerja yang aman, rapi, dan siap dipakai setiap hari.</p>
+            <div class="system-strip">
+                <div class="system-chip"><i data-lucide="shield-check"></i> Secure Portal</div>
+                <div class="system-chip"><i data-lucide="layers-3"></i> Integrated System</div>
+                <div class="system-chip"><i data-lucide="sparkles"></i> Dark Indigo UI</div>
+            </div>
+        </section>
+
+        <main class="app-grid">
+
+            <a href="https://diyanwinner.github.io/absen/" class="app-card c-absensi" aria-label="Absen Operator Harian">
+                <div class="card-glow"></div>
+                <div class="icon-wrapper"><i data-lucide="users"></i></div>
+                <div class="app-copy">
+                    <h2 class="app-title">Absen Operator Harian</h2>
+                    <p class="app-desc">Dashboard monitoring kehadiran karyawan, izin, sakit, dan rekapitulasi data shift secara real-time.</p>
+                </div>
+                <div class="enter-btn">Buka Aplikasi <span>→</span></div>
+            </a>
+            <a href="https://nenkapow.github.io/input-produksi/" class="app-card c-material" aria-label="Input Laporan Produksi">
+                <div class="card-glow"></div>
+                <div class="icon-wrapper"><i data-lucide="clipboard-list"></i></div>
+                <div class="app-copy">
+                    <h2 class="app-title">Input Laporan Produksi</h2>
+                    <p class="app-desc">Penghitungan laporan produksi dan sistem input produksi di work center injection.</p>
+                </div>
+                <div class="enter-btn">Buka Aplikasi <span>→</span></div>
+            </a>
+            <a href="https://diyanwinner.github.io/absen-produksi/" class="app-card c-hris" aria-label="Input Jumlah Operator">
+                <div class="card-glow"></div>
+                <div class="icon-wrapper"><i data-lucide="id-card"></i></div>
+                <div class="app-copy">
+                    <h2 class="app-title">Input Jumlah Operator</h2>
+                    <p class="app-desc">Sistem informasi sumber daya manusia ditiap work center, baik karyawan tetap ataupun karyawan yayasan.</p>
+                </div>
+                <div class="enter-btn">Buka Aplikasi <span>→</span></div>
+            </a>
+            <a href="https://produksitigermandiri-netizen.github.io/jatahsusu/" class="app-card c-price" aria-label="Jatah Susu">
+                <div class="card-glow"></div>
+                <div class="icon-wrapper"><i data-lucide="gift"></i></div>
+                <div class="app-copy">
+                    <h2 class="app-title">Jatah Susu</h2>
+                    <p class="app-desc">Sistem pencatatan dan pengelolaan jatah susu karyawan produksi secara terstruktur dan transparan.</p>
+                </div>
+                <div class="enter-btn">Buka Aplikasi <span>→</span></div>
+            </a>
+        </main>
+
+        <div class="footer-note">Tiger Production System · Private Asset · Dark Indigo Edition</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>
+        // Dark Indigo only: tidak ada light mode / theme toggle.
+        if (window.lucide) lucide.createIcons();
+
+        // Service Worker tetap aktif untuk PWA.
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+            .then(() => console.log('Service Worker Terdaftar!'))
+            .catch((err) => console.log('SW Gagal:', err));
+        }
+    </script>
+</body>
+</html>
