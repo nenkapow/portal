@@ -4,8 +4,8 @@
   "description": "Portal Utama Sistem Produksi",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#1e293b",
+  "background_color": "#0A728A",
+  "theme_color": "#0796A8",
   "icons": [
     {
       "src": "ikon-192.png",

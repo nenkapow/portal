@@ -1,0 +1,410 @@
+/*
+ * Produksi Portal — Coral Lagoon Edition
+ * A bright, tropical ocean identity distinct from the Tiger deep-ocean theme.
+ */
+
+:root {
+    --lagoon-ink: #07364a;
+    --lagoon-ink-soft: #416f7b;
+    --lagoon-teal: #0796a8;
+    --lagoon-aqua: #25d7c5;
+    --lagoon-mint: #9af5df;
+    --lagoon-foam: #f4fffc;
+    --lagoon-coral: #ff7d73;
+    --lagoon-coral-dark: #e65f5b;
+    --lagoon-sun: #ffd27d;
+    --lagoon-purple: #7f75cc;
+    --lagoon-glass: rgba(244, 255, 252, 0.82);
+    --lagoon-glass-strong: rgba(250, 255, 253, 0.94);
+    --lagoon-border: rgba(255, 255, 255, 0.62);
+    --lagoon-shadow: 0 24px 60px rgba(3, 79, 99, 0.19);
+
+    --bg-deep: #0a728a;
+    --bg-soft: #19b7bc;
+    --panel-bg: var(--lagoon-glass);
+    --panel-bg-strong: var(--lagoon-glass-strong);
+    --panel-border: rgba(7, 150, 168, 0.18);
+    --panel-border-strong: rgba(7, 150, 168, 0.34);
+    --text-primary: var(--lagoon-ink);
+    --text-secondary: var(--lagoon-ink-soft);
+    --text-soft: #315f6d;
+    --indigo: var(--lagoon-teal);
+    --indigo-soft: var(--lagoon-aqua);
+    --indigo-pale: #087f98;
+    --emerald: #13a878;
+    --purple: var(--lagoon-purple);
+    --orange: var(--lagoon-coral-dark);
+    --cyan: #087fba;
+    --shadow: rgba(3, 79, 99, 0.18);
+}
+
+html {
+    color-scheme: light;
+    background: #0a728a !important;
+}
+
+body {
+    isolation: isolate;
+    color: var(--lagoon-ink) !important;
+    background:
+        radial-gradient(circle at 83% 8%, rgba(255, 234, 164, 0.7), transparent 16%),
+        radial-gradient(ellipse 72% 46% at 50% -4%, rgba(221, 255, 246, 0.92), transparent 66%),
+        linear-gradient(180deg, #6de0d6 0%, #2ac6c5 28%, #1198ac 65%, #0a637d 100%) fixed !important;
+}
+
+body::before {
+    opacity: 0.15 !important;
+    mix-blend-mode: soft-light;
+}
+
+body > .container {
+    position: relative;
+    z-index: 2;
+}
+
+body > .bg-orb-1,
+body > .bg-orb-2,
+body > .bg-orb-3 {
+    position: fixed !important;
+    z-index: 0;
+}
+
+/* Reuse the original orbs as tropical colour pools. */
+.bg-orb-1 {
+    background: radial-gradient(circle, rgba(255, 210, 125, 0.4), transparent 69%) !important;
+}
+
+.bg-orb-2 {
+    background: radial-gradient(circle, rgba(154, 245, 223, 0.28), transparent 68%) !important;
+}
+
+.bg-orb-3 {
+    background: radial-gradient(circle, rgba(255, 125, 115, 0.11), transparent 70%) !important;
+}
+
+#lagoon-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+}
+
+.lagoon-sun {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    right: 8%;
+    top: -56px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 248, 203, 0.96) 0 18%, rgba(255, 220, 135, 0.58) 32%, transparent 72%);
+    filter: blur(2px);
+    animation: lagoonSun 6s ease-in-out infinite alternate;
+}
+
+.lagoon-caustics {
+    position: absolute;
+    inset: -22%;
+    opacity: 0.25;
+    background:
+        repeating-radial-gradient(ellipse at 22% 18%, transparent 0 32px, rgba(245,255,247,0.34) 34px 36px, transparent 38px 76px),
+        repeating-radial-gradient(ellipse at 74% 22%, transparent 0 38px, rgba(218,255,246,0.22) 40px 43px, transparent 45px 88px);
+    background-size: 260px 150px, 330px 185px;
+    filter: blur(5px);
+    animation: lagoonCaustics 18s linear infinite;
+}
+
+.lagoon-wave {
+    position: absolute;
+    left: -12%;
+    width: 124%;
+    border-radius: 45% 55% 0 0;
+    transform-origin: center;
+}
+
+.lagoon-wave--one {
+    top: -55px;
+    height: 126px;
+    opacity: 0.46;
+    background: radial-gradient(90px 42px at 90px 80px, transparent 62%, rgba(246,255,250,0.72) 64% 68%, transparent 70%) 0 0 / 185px 92px repeat-x;
+    animation: lagoonWave 12s linear infinite;
+}
+
+.lagoon-wave--two {
+    top: -34px;
+    height: 108px;
+    opacity: 0.25;
+    background: radial-gradient(72px 34px at 72px 65px, transparent 60%, rgba(255,255,255,0.7) 63% 67%, transparent 70%) 0 0 / 150px 78px repeat-x;
+    animation: lagoonWave 9s linear infinite reverse;
+}
+
+.lagoon-bubble {
+    position: absolute;
+    left: var(--bubble-x, 50%);
+    bottom: -36px;
+    width: var(--bubble-size, 10px);
+    height: var(--bubble-size, 10px);
+    border: 1.5px solid rgba(238, 255, 250, 0.7);
+    border-radius: 50%;
+    box-shadow: inset 2px 2px 4px rgba(255,255,255,0.24), 0 0 9px rgba(255,255,255,0.16);
+    opacity: 0;
+    animation: lagoonBubble var(--bubble-duration, 13s) ease-in infinite;
+    animation-delay: var(--bubble-delay, 0s);
+}
+
+.lagoon-bubble::after {
+    content: '';
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    left: 18%;
+    top: 14%;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.75);
+}
+
+.lagoon-school {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    color: rgba(246, 255, 250, 0.32);
+    filter: drop-shadow(0 7px 10px rgba(1, 66, 85, 0.12));
+    will-change: transform;
+}
+
+.lagoon-school svg { display: block; width: 100%; height: auto; }
+
+/* The SVG's tail is on the left and eye/nose on the right: it faces right. */
+.lagoon-school--right {
+    left: -260px;
+    top: 18%;
+    animation: lagoonSwimRight 27s linear 1s infinite;
+}
+
+.lagoon-school--right .fish:nth-child(1) { width: 62px; transform: translateY(7px); }
+.lagoon-school--right .fish:nth-child(2) { width: 42px; transform: translateY(-15px); opacity: 0.78; }
+.lagoon-school--right .fish:nth-child(3) { width: 50px; transform: translateY(18px); opacity: 0.66; }
+
+/* Leftbound fish are flipped so their heads face the direction of travel. */
+.lagoon-school--left {
+    right: -250px;
+    top: 70%;
+    color: rgba(255, 218, 151, 0.26);
+    animation: lagoonSwimLeft 33s linear 8s infinite;
+}
+
+.lagoon-school--left .fish { transform: scaleX(-1); }
+.lagoon-school--left .fish:nth-child(1) { width: 54px; }
+.lagoon-school--left .fish:nth-child(2) { width: 38px; margin-top: -34px; opacity: 0.72; }
+.lagoon-school--left .fish:nth-child(3) { width: 45px; margin-top: 24px; opacity: 0.62; }
+
+.lagoon-turtle {
+    position: absolute;
+    left: -190px;
+    top: 48%;
+    width: 120px;
+    color: rgba(7, 89, 100, 0.2);
+    filter: drop-shadow(0 12px 16px rgba(2, 63, 75, 0.14));
+    animation: lagoonTurtle 44s linear 4s infinite;
+    will-change: transform;
+}
+
+.lagoon-turtle svg { display: block; width: 100%; height: auto; }
+
+.lagoon-seabed {
+    position: absolute;
+    inset: auto 0 -4px;
+    height: 116px;
+    opacity: 0.58;
+}
+
+.lagoon-seabed svg { display: block; width: 100%; height: 100%; }
+
+/* Bright sea-glass interface */
+.hero-panel {
+    background:
+        radial-gradient(circle at 86% 4%, rgba(255, 210, 125, 0.2), transparent 28%),
+        linear-gradient(145deg, rgba(248,255,252,0.9), rgba(224,250,245,0.75)) !important;
+    border: 1px solid var(--lagoon-border) !important;
+    box-shadow: var(--lagoon-shadow), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+}
+
+.hero-panel::before {
+    background:
+        radial-gradient(circle at 12% 0%, rgba(37, 215, 197, 0.18), transparent 34%),
+        radial-gradient(circle at 92% 110%, rgba(255, 125, 115, 0.13), transparent 36%) !important;
+}
+
+.hero-panel::after {
+    content: '';
+    position: absolute;
+    left: -5%;
+    right: -5%;
+    bottom: -40px;
+    height: 82px;
+    opacity: 0.26;
+    background: radial-gradient(65px 30px at 65px 2px, transparent 61%, rgba(7,150,168,0.42) 63% 67%, transparent 69%) 0 0 / 145px 74px repeat-x;
+    animation: lagoonWave 13s linear infinite;
+}
+
+.badge {
+    color: #0b7083 !important;
+    background: rgba(224, 253, 247, 0.86) !important;
+    border-color: rgba(7, 150, 168, 0.22) !important;
+    box-shadow: 0 10px 26px rgba(7, 150, 168, 0.12) !important;
+}
+
+.badge::before {
+    background: var(--lagoon-coral) !important;
+    box-shadow: 0 0 16px rgba(255, 125, 115, 0.6) !important;
+}
+
+.title {
+    color: var(--lagoon-ink) !important;
+    text-shadow: 0 10px 30px rgba(3, 79, 99, 0.12) !important;
+}
+
+.title span {
+    color: var(--lagoon-coral-dark) !important;
+}
+
+.subtitle { color: var(--lagoon-ink-soft) !important; }
+
+.system-chip {
+    color: #2d6874 !important;
+    background: rgba(255,255,255,0.5) !important;
+    border-color: rgba(7, 150, 168, 0.14) !important;
+}
+
+.system-chip i { color: var(--lagoon-teal) !important; }
+
+.app-card {
+    color: var(--lagoon-ink) !important;
+    background:
+        radial-gradient(circle at 92% 0%, rgba(var(--card-accent-rgb),0.12), transparent 34%),
+        linear-gradient(150deg, rgba(249,255,252,0.91), rgba(223,248,244,0.77)) !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    box-shadow: 0 20px 55px rgba(3, 79, 99, 0.17), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+}
+
+.app-card::before {
+    background:
+        radial-gradient(circle at 14% 0%, rgba(var(--card-accent-rgb),0.18), transparent 34%),
+        radial-gradient(circle at 98% 108%, rgba(37,215,197,0.12), transparent 40%) !important;
+}
+
+.app-card::after {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.72), transparent) !important;
+}
+
+.app-card:hover {
+    border-color: rgba(var(--card-accent-rgb),0.42) !important;
+    box-shadow:
+        0 28px 70px rgba(3,79,99,0.24),
+        0 0 28px rgba(var(--card-accent-rgb),0.12),
+        inset 0 1px 0 rgba(255,255,255,0.96) !important;
+}
+
+.icon-wrapper {
+    background: rgba(var(--card-accent-rgb),0.1) !important;
+    border-color: rgba(var(--card-accent-rgb),0.2) !important;
+}
+
+.app-desc { color: var(--lagoon-ink-soft) !important; }
+.enter-btn { color: #4b7882 !important; }
+.app-card:hover .enter-btn { color: var(--card-accent) !important; }
+
+.c-absensi {
+    --card-accent: #087fba;
+    --card-accent-rgb: 8, 127, 186;
+}
+
+.c-material {
+    --card-accent: #119b78;
+    --card-accent-rgb: 17, 155, 120;
+}
+
+.c-hris {
+    --card-accent: #7667bd;
+    --card-accent-rgb: 118, 103, 189;
+}
+
+.c-price {
+    --card-accent: #e5605a;
+    --card-accent-rgb: 229, 96, 90;
+}
+
+.footer-note {
+    color: rgba(239,255,251,0.9) !important;
+    background: rgba(3, 92, 112, 0.3) !important;
+    border-color: rgba(255,255,255,0.22) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+@keyframes lagoonSun {
+    from { opacity: 0.78; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1.07); }
+}
+
+@keyframes lagoonCaustics {
+    0% { transform: translate3d(-3%, -2%, 0) rotate(-1deg) scale(1.03); }
+    50% { transform: translate3d(4%, 3%, 0) rotate(1deg) scale(1.1); }
+    100% { transform: translate3d(-3%, -2%, 0) rotate(-1deg) scale(1.03); }
+}
+
+@keyframes lagoonWave {
+    to { transform: translateX(185px); }
+}
+
+@keyframes lagoonBubble {
+    0% { transform: translate3d(0, 0, 0) scale(0.66); opacity: 0; }
+    14% { opacity: 0.55; }
+    52% { transform: translate3d(16px, -52vh, 0) scale(0.9); }
+    82% { opacity: 0.38; }
+    100% { transform: translate3d(-10px, -112vh, 0) scale(1.18); opacity: 0; }
+}
+
+@keyframes lagoonSwimRight {
+    0% { transform: translate3d(0, 0, 0); }
+    45% { transform: translate3d(55vw, 20px, 0); }
+    100% { transform: translate3d(calc(100vw + 520px), -12px, 0); }
+}
+
+@keyframes lagoonSwimLeft {
+    0% { transform: translate3d(0, 0, 0); }
+    48% { transform: translate3d(-58vw, -18px, 0); }
+    100% { transform: translate3d(calc(-100vw - 500px), 12px, 0); }
+}
+
+@keyframes lagoonTurtle {
+    0% { transform: translate3d(0, 0, 0) rotate(-2deg); }
+    45% { transform: translate3d(54vw, -24px, 0) rotate(2deg); }
+    100% { transform: translate3d(calc(100vw + 380px), 15px, 0) rotate(-1deg); }
+}
+
+@media (max-width: 640px) {
+    .lagoon-sun { width: 110px; height: 110px; right: 2%; }
+    .lagoon-school--left { display: none; }
+    .lagoon-school--right { opacity: 0.68; top: 12%; }
+    .lagoon-turtle { width: 86px; opacity: 0.65; }
+    .lagoon-seabed { height: 84px; opacity: 0.45; }
+    .lagoon-caustics { opacity: 0.14; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #lagoon-scene *,
+    .hero-panel::after {
+        animation: none !important;
+    }
+    .lagoon-school,
+    .lagoon-turtle { display: none; }
+    .lagoon-bubble { opacity: 0.18; }
+}
+
+@media print {
+    #lagoon-scene { display: none !important; }
+    body { background: #fff !important; }
+    body > .container { z-index: auto; }
+}
